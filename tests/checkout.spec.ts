@@ -1,47 +1,32 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
+import { LoginPage } from '../page-objects/LoginPage';
+import { ProductPage } from '../page-objects/ProductPage';
+import { CartPage } from '../page-objects/CartPage';
+import { CheckoutPage } from '../page-objects/CheckoutPage';
 
-// Test suite for checkout functionality
 test.describe('Checkout Process', () => {
-
-  // Runs before each test: logs in and adds a product to the cart
   test.beforeEach(async ({ page }) => {
-    // Navigate to the login page
-    await page.goto('https://www.saucedemo.com/');
-    
-    // Fill in valid credentials
-    await page.fill('#user-name', 'standard_user');
-    await page.fill('#password', 'secret_sauce');
-    
-    // Submit the login form
-    await page.click('#login-button');
-    await expect(page).toHaveURL(/inventory/);
+    const loginPage = new LoginPage(page);
+    await loginPage.goto();
+    await loginPage.login('standard_user', 'secret_sauce');
+    await loginPage.assertLoginSuccess();
 
-    // Add the first product to the cart
-    await page.locator('.btn_inventory').first().click();
-
-    // Go to the cart page
-    await page.click('.shopping_cart_link');
-    await expect(page).toHaveURL(/cart/);
+    const productPage = new ProductPage(page);
+    await productPage.addFirstProductToCart();
+    await productPage.goToCart(); // Método corrigido aqui
   });
 
-  // Test: Complete checkout with valid data
-  test('Should complete checkout with valid information', async ({ page }) => {
-    // Click the checkout button
-    await page.click('[data-test="checkout"]');
+  test('Should complete checkout with valid info', async ({ page }) => {
+    const cartPage = new CartPage(page);
+    const checkoutPage = new CheckoutPage(page);
 
-    // Fill out checkout information
-    await page.fill('[data-test="firstName"]', 'Test');
-    await page.fill('[data-test="lastName"]', 'User');
-    await page.fill('[data-test="postalCode"]', '12345');
-    await page.click('[data-test="continue"]');
+    // Proceed to checkout
+    await cartPage.proceedToCheckout();
 
-    // Confirm overview page
-    await expect(page).toHaveURL(/checkout-step-two/);
+    // Fill checkout info
+    await checkoutPage.fillCheckoutInfo('Test', 'User', '12345');
 
-    // Finish checkout
-    await page.click('[data-test="finish"]');
-
-    // Assert confirmation message (corrected text)
-    await expect(page.locator('.complete-header')).toHaveText('Thank you for your order!');
+    // Complete checkout
+    await checkoutPage.completeCheckout();
   });
 });
