@@ -1,19 +1,17 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
+import { LoginPage } from '../page-objects/LoginPage';
 
-// Test: Successful login with valid credentials
-test('Login with valid credentials', async ({ page }) => {
-  // Navigate to the Swag Labs login page
-  await page.goto('https://www.saucedemo.com/');
+// Test: Login with valid credentials using the LoginPage Page Object
+test('Login with valid credentials using Page Object', async ({ page }) => {
+  // Instantiate the LoginPage Page Object
+  const loginPage = new LoginPage(page);
 
-  // Fill in the username field with a valid user
-  await page.fill('#user-name', 'standard_user');
+  // Navigate to the login page
+  await loginPage.goto();
 
-  // Fill in the password field with the correct password
-  await page.fill('#password', 'secret_sauce');
+  // Perform login with valid credentials
+  await loginPage.login('standard_user', 'secret_sauce');
 
-  // Click the login button to submit the form
-  await page.click('#login-button');
-
-  // Assert that the login was successful by checking the URL
-  await expect(page).toHaveURL(/inventory/); // Should be redirected to the inventory page
+  // Assert that the login was successful
+  await loginPage.assertLoginSuccess();
 });
