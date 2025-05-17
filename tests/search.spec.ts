@@ -1,39 +1,48 @@
 import { test, expect } from '@playwright/test';
+import { LoginPage } from '../page-objects/LoginPage';
+import { ProductPage } from '../page-objects/ProductPage';
 
-// Test suite for product search and sorting functionality
-test.describe('Product Search', () => {
-
-  // Runs before each test: logs in as a standard user
+test.describe('Product Search and Sorting', () => {
   test.beforeEach(async ({ page }) => {
-    // Navigate to the login page
-    await page.goto('https://www.saucedemo.com/');
-    
-    // Fill in valid credentials
-    await page.fill('#user-name', 'standard_user');   // Username field
-    await page.fill('#password', 'secret_sauce');     // Password field
-    
-    // Submit the login form
-    await page.click('#login-button');                // Login button
-
-    // Assert successful login by checking the URL
-    await expect(page).toHaveURL(/inventory/);        // Post-login URL validation
+    const loginPage = new LoginPage(page);
+    await loginPage.goto();
+    await loginPage.login('standard_user', 'secret_sauce');
+    await loginPage.assertLoginSuccess();
   });
 
-  // Test: Sort products by price (low to high)
   test('Should sort products by price (low to high)', async ({ page }) => {
-    // Select the "low to high" sorting option
-    await page.selectOption('.product_sort_container', 'lohi'); // 'lohi' = Low to High
+    const productPage = new ProductPage(page);
+    await productPage.goto();
+    await productPage.sortProducts('lohi');
+    const prices = await productPage.getProductPrices();
+    const sortedPrices = [...prices].sort((a, b) => a - b);
+    expect(prices).toEqual(sortedPrices);
+  });
 
-    // Get all displayed product prices
-    const prices = await page.locator('.inventory_item_price').allTextContents();
+  test('Should sort products by price (high to low)', async ({ page }) => {
+    const productPage = new ProductPage(page);
+    await productPage.goto();
+    await productPage.sortProducts('hilo');
+    const prices = await productPage.getProductPrices();
+    const sortedPrices = [...prices].sort((a, b) => b - a);
+    expect(prices).toEqual(sortedPrices);
+  });
 
-    // Convert price strings to numbers (remove '$' and parse as float)
-    const numericPrices = prices.map(p => parseFloat(p.replace('$', '')));
+  test('Should sort products by name (A-Z)', async ({ page }) => {
+    const productPage = new ProductPage(page);
+    await productPage.goto();
+    await productPage.sortProducts('az');
+    const names = await productPage.getProductNames();
+    const sortedNames = [...names].sort((a, b) => a.localeCompare(b));
+    expect(names).toEqual(sortedNames);
+  });
 
-    // Create a sorted copy of the prices array for comparison
-    const sortedPrices = [...numericPrices].sort((a, b) => a - b);
-
-    // Assert that the displayed prices are sorted in ascending order
-    expect(numericPrices).toEqual(sortedPrices);
+  test('Should sort products by name (Z-A)', async ({ page }) => {
+    const productPage = new ProductPage(page);
+    await productPage.goto();
+    await productPage.sortProducts('za');
+    const names = await productPage.getProductNames();
+    const sortedNames = [...names].sort((a, b) => b.localeCompare(a));
+    expect(names).toEqual(sortedNames);
   });
 });
