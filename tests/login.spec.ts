@@ -1,17 +1,11 @@
-import { test } from '@playwright/test';
-import { LoginPage } from '../page-objects/LoginPage';
+import { test, expect } from '../fixtures/fixtures';
 
-// Test: Login with valid credentials using the LoginPage Page Object
-test('Login with valid credentials using Page Object', async ({ page }) => {
-  // Instantiate the LoginPage Page Object
-  const loginPage = new LoginPage(page);
-
-  // Navigate to the login page
-  await loginPage.goto();
-
-  // Perform login with valid credentials
-  await loginPage.login('standard_user', 'secret_sauce');
-
-  // Assert that the login was successful
-  await loginPage.assertLoginSuccess();
+/**
+ * Test: Login with valid credentials using the login fixture.
+ * The test starts already logged in as the standard user.
+ */
+test('Login with valid credentials using fixture', async ({ loginAsStandardUser, page }) => {
+  await loginAsStandardUser();
+  // Now the user is logged in, we can check if the URL is correct
+  await expect(page).toHaveURL(/inventory/);
 });
