@@ -1,24 +1,31 @@
 import { test, expect } from '@playwright/test';
+import { LoginPage } from '../page-objects/LoginPage';
+import { ProductPage } from '../page-objects/ProductPage';
+import { CartPage } from '../page-objects/CartPage';
 
-// Test suite for cart functionality
 test.describe('Cart Functionality', () => {
-
   // Runs before each test: logs in as a standard user
   test.beforeEach(async ({ page }) => {
-    await page.goto('https://www.saucedemo.com/');
-    await page.fill('#user-name', 'standard_user');
-    await page.fill('#password', 'secret_sauce');
-    await page.click('#login-button');
-    await expect(page).toHaveURL(/inventory/);
+    const loginPage = new LoginPage(page);
+    await loginPage.goto();
+    await loginPage.login('standard_user', 'secret_sauce');
+    await loginPage.assertLoginSuccess();
   });
 
-  // Test: Add first product to cart and check cart badge
-  test('Should add first product to cart', async ({ page }) => {
-    // Click "Add to cart" on the first product
-    await page.locator('.btn_inventory').first().click();
+  test('Should add first product to cart and update badge count', async ({ page }) => {
+    const productPage = new ProductPage(page);
 
-    // Check if the cart badge shows "1"
-    const cartCount = await page.locator('.shopping_cart_badge').textContent();
-    expect(cartCount).toBe('1');
+    // Add the first product to the cart
+    await productPage.addFirstProductToCart();
+
+    // Validate that the cart badge displays "1"
+    const cartCount = await productPage.getCartItemCount();
+    expect(cartCount).toBe(1);
+
+    // Go to the cart page and check if the product is listed
+    await productPage.goToCart();
+    const cartPage = new CartPage(page);
+    const cartProductNames = await cartPage.getProductNames();
+    expect(cartProductNames.length).toBeGreaterThan(0);
   });
 });
