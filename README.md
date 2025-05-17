@@ -40,16 +40,19 @@ This project demonstrates modern QA practices including isolated test files, cle
 ## Repository Structure
 
 ```
-├── fixtures/             # Reusable setup and utility code (to be implemented)
-├── node_modules/         # Project dependencies (auto-generated)
-├── page-objects/         # Page Object Model implementations (planned)
-├── reports/              # Test execution reports
-├── tests/                # Automated test scripts
-│   ├── login.spec.ts         # Login scenario
-│   ├── search.spec.ts        # Product search and sorting
-│   ├── cart.spec.ts          # Add to cart
-│   ├── checkout.spec.ts      # Checkout process
-│   └── confirmation.spec.ts  # Order confirmation
+├── node_modules/ # Project dependencies (auto-generated)
+├── page-objects/ # Page Object Model implementations
+│ ├── LoginPage.ts
+│ ├── ProductPage.ts
+│ ├── CartPage.ts
+│ └── CheckoutPage.ts
+├── reports/ # Test execution reports
+├── tests/ # Automated test scripts
+│ ├── login.spec.ts # Login scenario
+│ ├── search.spec.ts # Product search and sorting
+│ ├── cart.spec.ts # Add to cart
+│ ├── checkout.spec.ts # Checkout process
+│ └── confirmation.spec.ts # Order confirmation
 ├── .gitignore
 ├── LICENSE
 ├── package-lock.json
@@ -63,31 +66,34 @@ This project demonstrates modern QA practices including isolated test files, cle
 
 ## Covered Test Scenarios
 
-- **Login**: Valid credentials login flow  
-- **Product Search**: Sorting products by price (low to high)  
-- **Cart**: Adding a product to the cart and validating the cart badge  
-- **Checkout**: Completing the checkout with valid information  
-- **Order Confirmation**: Validating the confirmation message and returning to the products page  
+- **Login:** Valid credentials login flow
+- **Product Search & Sorting:** Sorting products by price and name (A-Z, Z-A, low-high, high-low)
+- **Cart:** Adding a product to the cart and validating the cart badge
+- **Checkout:** Completing the checkout with valid information
+- **Order Confirmation:** Validating the confirmation message and returning to the products page 
 
 ---
 
 ## Project Highlights
 
-- Isolated, functional test files with clear scenario coverage  
-- Progressive enhancements including Page Object Model, fixtures, and advanced reporting  
-- Full TypeScript support for type safety and maintainability  
-- Clean commit history with conventional commit messages
+- Applies the Page Object Model to keep UI interactions organized and easier to maintain.
+- Each test file focuses on a real user scenario (login, sorting, cart, checkout, confirmation).
+- All code is written in TypeScript for better readability and type safety.
+- Uses Conventional Commits for a clear and understandable commit history.
+- English comments are included throughout the code to help with understanding and future maintenance.
+- The project is structured to make it easier to add new features and improvements as my learning progresses.
 
 ---
 
 ## Roadmap & Next Steps
 
-- ✅ Implement core user flow test files  
-- 🔄 Refactor tests using the Page Object Model  
-- 🧱 Add reusable fixtures for setup and teardown  
-- ➕ Expand test coverage (including negative and edge cases)  
-- 📚 Improve documentation and provide usage examples  
-- 🔧 Integrate reporting and CI pipeline suggestions  
+- ✅ Refactored all tests to use the Page Object Model
+- ✅ Improved code comments and documentation
+- ✅ Covered main user flows: login, sorting, cart, checkout, confirmation
+- 🔄 Add reusable fixtures for setup and teardown
+- ➕ Expand test coverage with negative and edge case scenarios
+- 📚 Add more documentation and usage examples
+- 🔧 Integrate reporting and CI pipeline
 
 ---
 
