@@ -1,0 +1,29 @@
+{
+  "name": "web-automation-suite",
+  "version": "1.0.0",
+  "description": "End-to-end automation tests for Swag Labs using Playwright.",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rennanreis/web-automation-suite.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/rennanreis/web-automation-suite/issues"
+  },
+  "homepage": "https://github.com/rennanreis/web-automation-suite#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.52.0",
+    "@types/node": "^22.15.18",
+    "typescript": "^5.8.3"
+  }
+}
