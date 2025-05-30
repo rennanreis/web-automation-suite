@@ -19,7 +19,7 @@ export class ProductPage {
     this.sortDropdown = page.locator('.product_sort_container');
     this.productNames = page.locator('.inventory_item_name');
     this.productPrices = page.locator('.inventory_item_price');
-    this.addToCartButtons = page.locator('.btn_inventory');
+    this.addToCartButtons = page.locator('[data-test^="add-to-cart-"]');
     this.cartLink = page.locator('.shopping_cart_link');
     this.cartBadge = page.locator('.shopping_cart_badge');
   }

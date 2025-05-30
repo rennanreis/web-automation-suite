@@ -20,7 +20,7 @@ export class CartPage {
     this.page = page;
     this.checkoutButton = page.locator('[data-test="checkout"]');
     this.cartItems = page.locator('.cart_item');
-    this.removeButtons = page.locator('button:has-text("Remove")'); 
+    this.removeButtons = page.locator('[data-test^="remove-"]');
   }
 
   /**
