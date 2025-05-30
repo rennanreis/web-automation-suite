@@ -1,40 +1,60 @@
 // page-objects/LoginPage.ts
-import { Page, expect } from '@playwright/test';
+import { Page, Locator, expect } from '@playwright/test';
 
 /**
  * LoginPage groups actions for the login screen.
- * Here I keep all steps to access the app using a username and password.
+ * Contains methods to interact with login elements and validate states.
  */
 export class LoginPage {
   readonly page: Page;
+  readonly usernameInput: Locator;
+  readonly passwordInput: Locator;
+  readonly loginButton: Locator;
+  readonly errorMessage: Locator;
 
-   /**
-   * Needs the Playwright page instance to work.
+  /**
+   * Initializes all login page locators
+   * @param page - Playwright page instance
    */
   constructor(page: Page) {
     this.page = page;
+    this.usernameInput = page.locator('#user-name');
+    this.passwordInput = page.locator('#password');
+    this.loginButton = page.locator('#login-button');
+    this.errorMessage = page.locator('[data-test="error"]');
   }
 
   /**
-   * Opens the login page of the application.
+   * Navigates to the login page
    */
   async goto() {
     await this.page.goto('https://www.saucedemo.com/');
   }
 
-   /**
-   * Fills the username and password fields and clicks the login button.
+  /**
+   * Performs login with provided credentials
+   * @param username - User's username
+   * @param password - User's password
    */
   async login(username: string, password: string) {
-    await this.page.fill('#user-name', username);
-    await this.page.fill('#password', password);
-    await this.page.click('#login-button');
+    await this.usernameInput.fill(username);
+    await this.passwordInput.fill(password);
+    await this.loginButton.click();
   }
 
-   /**
-   * Checks if the login worked by confirming the URL.
+  /**
+   * Validates successful login by checking inventory page URL
    */
   async assertLoginSuccess() {
     await expect(this.page).toHaveURL(/inventory/);
+  }
+
+  /**
+   * Validates login error message content
+   * @param expectedMessage - Expected error message text
+   */
+  async assertLoginError(expectedMessage: string) {
+    await expect(this.errorMessage).toBeVisible();
+    await expect(this.errorMessage).toContainText(expectedMessage);
   }
 }
