@@ -59,6 +59,11 @@ export const test = base.extend<{
     await productPage.navigate();
     await use(() => Promise.resolve());
   },
+  resetState: async ({ page }, use) => {
+  const cartPage = new CartPage(page);
+  await cartPage.removeAllItems(); 
+  await use(() => Promise.resolve());
+},
 });
 
 // Re-export expect to use in all tests

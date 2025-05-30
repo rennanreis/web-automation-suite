@@ -28,4 +28,30 @@ test.describe('Cart Functionality', () => {
     const cartProductNames = await cartPage.getProductNames();
     expect(cartProductNames.length).toBeGreaterThan(0);
   });
+
+  test('Should add, check, and remove products from cart', async ({ page }) => {
+    const productPage = new ProductPage(page);
+    const cartPage = new CartPage(page);
+
+    // 1. Add the first product to the cart
+    await productPage.addFirstProductToCart();
+
+    // 2. Validate that the cart badge displays "1"
+    let cartCount = await productPage.getCartItemCount();
+    expect(cartCount).toBe(1);
+
+    // 3. Go to the cart page and check if the product is listed
+    await productPage.goToCart();
+    let cartProductNames = await cartPage.getProductNames();
+    expect(cartProductNames.length).toBeGreaterThan(0);
+
+    // 4. Remove all items from the cart
+    await cartPage.removeAllItems();
+
+    // 5. Check if the cart is empty
+    cartProductNames = await cartPage.getProductNames();
+    expect(cartProductNames.length).toBe(0);
+  });
+
+  
 });

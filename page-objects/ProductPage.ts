@@ -12,6 +12,7 @@ export class ProductPage {
   readonly productPrices: Locator;
   readonly addToCartButtons: Locator;
   readonly cartLink: Locator;
+  readonly cartBadge: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -20,6 +21,7 @@ export class ProductPage {
     this.productPrices = page.locator('.inventory_item_price');
     this.addToCartButtons = page.locator('.btn_inventory');
     this.cartLink = page.locator('.shopping_cart_link');
+    this.cartBadge = page.locator('.shopping_cart_badge');
   }
 
  /**

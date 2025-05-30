@@ -10,6 +10,7 @@ export class CartPage {
   readonly page: Page;
   readonly checkoutButton: Locator;
   readonly cartItems: Locator;
+  removeButtons: any;
 
   /**
    * Creates a new CartPage instance.
@@ -19,6 +20,7 @@ export class CartPage {
     this.page = page;
     this.checkoutButton = page.locator('[data-test="checkout"]');
     this.cartItems = page.locator('.cart_item');
+    this.removeButtons = page.locator('button:has-text("Remove")'); 
   }
 
   /**
@@ -35,5 +37,21 @@ export class CartPage {
     await expect(this.cartItems).not.toHaveCount(0);
     await this.checkoutButton.click();
     await this.page.waitForURL('**/checkout-step-one.html');
+  }
+
+  /**
+   * Removes all items from the cart by clicking each "Remove" button sequentially
+   */
+   async removeAllItems(): Promise<void> {
+    await this.removeButtons.first().waitFor({ state: 'visible', timeout: 5000 });
+    
+    const initialCount = await this.removeButtons.count();
+    
+    for (let i = 0; i < initialCount; i++) {
+      await this.removeButtons.first().click();
+      await this.page.waitForTimeout(500);
+    }
+    
+    await expect(this.cartItems).toHaveCount(0);
   }
 }
