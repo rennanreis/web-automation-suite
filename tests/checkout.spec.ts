@@ -1,4 +1,5 @@
 import { test } from '@playwright/test';
+import { test, expect } from '../fixtures/fixtures';
 import { LoginPage } from '../page-objects/LoginPage';
 import { ProductPage } from '../page-objects/ProductPage';
 import { CartPage } from '../page-objects/CartPage';
@@ -17,6 +18,7 @@ test.describe('Checkout Process', () => {
   });
 
   test('Should complete checkout with valid info', async ({ page }) => {
+    await addProductToCart(); 
     const cartPage = new CartPage(page);
     const checkoutPage = new CheckoutPage(page);
 
@@ -28,5 +30,7 @@ test.describe('Checkout Process', () => {
 
     // Complete checkout
     await checkoutPage.completeCheckout();
+
+    await expect(checkoutPage.confirmationMessage).toHaveText('Thank you for your order!');
   });
 });

@@ -1,5 +1,6 @@
 import { test as base } from '@playwright/test';
 import { LoginPage } from '../page-objects/LoginPage';
+import { ProductPage } from '../page-objects/ProductPage';
 
 /**
  * Custom test setup with fixtures for this project.
@@ -18,6 +19,12 @@ export const test = base.extend<{
     await loginPage.login('standard_user', 'secret_sauce');
     await loginPage.assertLoginSuccess();
     // Makes the login available for the test
+    await use(() => Promise.resolve());
+  },
+  addProductToCart: async ({ page, loginAsStandardUser }, use) => {
+    await loginAsStandardUser(); 
+    const productPage = new ProductPage(page);
+    await productPage.addFirstProductToCart();
     await use(() => Promise.resolve());
   },
 });
