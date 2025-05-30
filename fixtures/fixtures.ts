@@ -3,6 +3,15 @@ import { LoginPage } from '../page-objects/LoginPage';
 import { ProductPage } from '../page-objects/ProductPage';
 import { CartPage } from '../page-objects/CartPage';
 
+type TestData = {
+  users: {
+    standard: { username: string; password: string };
+    locked: { username: string; password: string };
+    invalid: { username: string; password: string };
+  };
+  products: string[];
+};
+
 /**
  * Custom test setup with fixtures for this project.
  * Here I create a reusable login fixture for tests that need authentication.
@@ -15,7 +24,18 @@ export const test = base.extend<{
   loginAsStandardUser: () => Promise<void>;
   addProductToCart: () => Promise<void>;
   navigateToProducts: () => Promise<void>;
+  testData: TestData;
 }>({
+  testData: async ({}, use) => {
+    await use({
+      users: {
+        standard: { username: 'standard_user', password: 'secret_sauce' },
+        locked: { username: 'locked_out_user', password: 'secret_sauce' },
+        invalid: { username: 'invalid', password: 'invalid' }
+      },
+      products: ['Sauce Labs Backpack', 'Sauce Labs Bike Light']
+    });
+  },
   loginAsStandardUser: async ({ page }, use) => {
     const loginPage = new LoginPage(page);
     await loginPage.goto();
@@ -26,15 +46,11 @@ export const test = base.extend<{
   },
   addProductToCart: async ({ page, loginAsStandardUser }, use) => {
     await loginAsStandardUser(); 
-
     const productPage = new ProductPage(page);
     await productPage.addFirstProductToCart();
     await productPage.goToCart();
-
     const cartPage = new CartPage(page);
-    
     await expect(cartPage.cartItems).not.toHaveCount(0);
-    
     await use(() => Promise.resolve());
   },
    navigateToProducts: async ({ page, loginAsStandardUser }, use) => {
