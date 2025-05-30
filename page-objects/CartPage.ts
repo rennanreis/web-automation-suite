@@ -1,5 +1,6 @@
 // page-objects/CartPage.ts
 import { Page, Locator } from '@playwright/test';
+import { expect } from '@playwright/test';
 
 /**
  * CartPage groups actions for the shopping cart screen.
@@ -31,8 +32,8 @@ export class CartPage {
    * Clicks the checkout button to continue the purchase.
    */
   async proceedToCheckout(): Promise<void> {
+    await expect(this.cartItems).not.toHaveCount(0);
     await this.checkoutButton.click();
-    // Optionally, you can add:
-    // await this.page.waitForURL('**/checkout-step-one.html');
+    await this.page.waitForURL('**/checkout-step-one.html');
   }
 }

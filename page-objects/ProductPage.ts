@@ -1,5 +1,5 @@
 // page-objects/ProductPage.ts
-import { Page, Locator } from '@playwright/test';
+import { Page, Locator, expect } from '@playwright/test';
 
 /**
  * ProductPage groups actions for the product list screen.
@@ -11,7 +11,7 @@ export class ProductPage {
   readonly productNames: Locator;
   readonly productPrices: Locator;
   readonly addToCartButtons: Locator;
-  readonly cartBadge: Locator;
+  readonly cartLink: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -19,7 +19,7 @@ export class ProductPage {
     this.productNames = page.locator('.inventory_item_name');
     this.productPrices = page.locator('.inventory_item_price');
     this.addToCartButtons = page.locator('.btn_inventory');
-    this.cartBadge = page.locator('.shopping_cart_badge');
+    this.cartLink = page.locator('.shopping_cart_link');
   }
 
  /**
@@ -81,5 +81,6 @@ export class ProductPage {
    */
   async goToCart() {
     await this.page.click('.shopping_cart_link');
+    await this.page.waitForURL('**/cart.html', { timeout: 15000 });
   }
 }

@@ -1,6 +1,7 @@
-import { test as base } from '@playwright/test';
+import { test as base, expect } from '@playwright/test';
 import { LoginPage } from '../page-objects/LoginPage';
 import { ProductPage } from '../page-objects/ProductPage';
+import { CartPage } from '../page-objects/CartPage';
 
 /**
  * Custom test setup with fixtures for this project.
@@ -12,6 +13,8 @@ export const test = base.extend<{
    * Use this fixture to avoid repeating the login steps in every test.
    */
   loginAsStandardUser: () => Promise<void>;
+  addProductToCart: () => Promise<void>;
+  navigateToProducts: () => Promise<void>;
 }>({
   loginAsStandardUser: async ({ page }, use) => {
     const loginPage = new LoginPage(page);
@@ -23,8 +26,21 @@ export const test = base.extend<{
   },
   addProductToCart: async ({ page, loginAsStandardUser }, use) => {
     await loginAsStandardUser(); 
+
     const productPage = new ProductPage(page);
     await productPage.addFirstProductToCart();
+    await productPage.goToCart();
+
+    const cartPage = new CartPage(page);
+    
+    await expect(cartPage.cartItems).not.toHaveCount(0);
+    
+    await use(() => Promise.resolve());
+  },
+   navigateToProducts: async ({ page, loginAsStandardUser }, use) => {
+    await loginAsStandardUser();
+    const productPage = new ProductPage(page);
+    await productPage.navigate();
     await use(() => Promise.resolve());
   },
 });
