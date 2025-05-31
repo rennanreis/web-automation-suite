@@ -22,12 +22,12 @@ export class LoginPage {
     this.passwordInput = page.locator('[data-test="password"]');
     this.loginButton = page.locator('[data-test="login-button"]');
     this.errorMessage = page.locator('[data-test="error"]');
-    }
+  }
 
   /**
    * Navigates to the login page
    */
-  async goto() {
+  async goto(): Promise<void> {
     await this.page.goto('https://www.saucedemo.com/');
   }
 
@@ -36,7 +36,7 @@ export class LoginPage {
    * @param username - User's username
    * @param password - User's password
    */
-  async login(username: string, password: string) {
+  async login(username: string, password: string): Promise<void> {
     await this.usernameInput.fill(username);
     await this.passwordInput.fill(password);
     await this.loginButton.click();
@@ -45,7 +45,7 @@ export class LoginPage {
   /**
    * Validates successful login by checking inventory page URL
    */
-  async assertLoginSuccess() {
+  async assertLoginSuccess(): Promise<void> {
     await expect(this.page).toHaveURL(/inventory/);
   }
 
@@ -53,7 +53,7 @@ export class LoginPage {
    * Validates login error message content
    * @param expectedMessage - Expected error message text
    */
-  async assertLoginError(expectedMessage: string) {
+  async assertLoginError(expectedMessage: string): Promise<void> {
     await expect(this.errorMessage).toBeVisible();
     await expect(this.errorMessage).toContainText(expectedMessage);
   }

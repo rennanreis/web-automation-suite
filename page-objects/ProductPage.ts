@@ -24,10 +24,10 @@ export class ProductPage {
     this.cartBadge = page.locator('.shopping_cart_badge');
   }
 
- /**
+  /**
    * Opens the product list page.
    */
-  async navigate() {
+  async navigate(): Promise<void> {
     await this.page.goto('https://www.saucedemo.com/inventory.html');
   }
 
@@ -35,7 +35,7 @@ export class ProductPage {
    * Sorts products by the selected option.
    * Options: 'az', 'za', 'lohi', 'hilo'
    */
-  async sortProductsBy(option: 'az' | 'za' | 'lohi' | 'hilo') {
+  async sortProductsBy(option: 'az' | 'za' | 'lohi' | 'hilo'): Promise<void> {
     await this.sortDropdown.selectOption(option);
   }
 
@@ -46,7 +46,7 @@ export class ProductPage {
     return this.productNames.allTextContents();
   }
 
- /**
+  /**
    * Returns a list with all product prices as numbers.
    */
   async getAllProductPrices(): Promise<number[]> {
@@ -57,32 +57,32 @@ export class ProductPage {
   /**
    * Adds a product to the cart by its position in the list.
    */
-  async addProductToCartByIndex(index: number) {
+  async addProductToCartByIndex(index: number): Promise<void> {
     await this.addToCartButtons.nth(index).click();
   }
 
-   /**
+  /**
    * Adds the first product in the list to the cart.
    */
-  async addFirstProductToCart() {
+  async addFirstProductToCart(): Promise<void> {
     await this.addToCartButtons.first().click();
   }
 
-   /**
+  /**
    * Returns the number of items shown in the cart badge.
    * Returns 0 if the badge is hidden.
    */
   async getCartItemCount(): Promise<number> {
-    return (await this.cartBadge.isVisible()) 
-      ? Number(await this.cartBadge.textContent()) 
+    return (await this.cartBadge.isVisible())
+      ? Number(await this.cartBadge.textContent())
       : 0;
   }
 
-   /**
+  /**
    * Opens the cart page by clicking the cart icon.
    */
-  async goToCart() {
-    await this.page.click('.shopping_cart_link');
+  async goToCart(): Promise<void> {
+    await this.cartLink.click();
     await this.page.waitForURL('**/cart.html', { timeout: 15000 });
   }
 }

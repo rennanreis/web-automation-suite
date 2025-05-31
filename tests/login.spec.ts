@@ -20,7 +20,9 @@ test('Login with invalid credentials', async ({ page, testData }) => {
     testData.users.invalid.username,
     testData.users.invalid.password
   );
-  await loginPage.assertLoginError('Epic sadface: Username and password do not match any user in this service');
+  await loginPage.assertLoginError(
+    'Epic sadface: Username and password do not match any user in this service'
+  );
 });
 
 /**
@@ -33,5 +35,7 @@ test('Login with locked user', async ({ page, testData }) => {
     testData.users.locked.username,
     testData.users.locked.password
   );
-  await loginPage.assertLoginError('Epic sadface: Sorry, this user has been locked out.');
+  await loginPage.assertLoginError(
+    'Epic sadface: Sorry, this user has been locked out.'
+  );
 });

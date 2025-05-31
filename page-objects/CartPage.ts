@@ -1,6 +1,5 @@
 // page-objects/CartPage.ts
-import { Page, Locator } from '@playwright/test';
-import { expect } from '@playwright/test';
+import { Page, Locator, expect } from '@playwright/test';
 
 /**
  * CartPage groups actions for the shopping cart screen.
@@ -10,7 +9,7 @@ export class CartPage {
   readonly page: Page;
   readonly checkoutButton: Locator;
   readonly cartItems: Locator;
-  removeButtons: any;
+  readonly removeButtons: Locator; // melhor marcar como readonly
 
   /**
    * Creates a new CartPage instance.
@@ -30,7 +29,7 @@ export class CartPage {
     return this.cartItems.locator('.inventory_item_name').allTextContents();
   }
 
-   /**
+  /**
    * Clicks the checkout button to continue the purchase.
    */
   async proceedToCheckout(): Promise<void> {
@@ -42,16 +41,15 @@ export class CartPage {
   /**
    * Removes all items from the cart by clicking each "Remove" button sequentially
    */
-   async removeAllItems(): Promise<void> {
-    await this.removeButtons.first().waitFor({ state: 'visible', timeout: 5000 });
-    
-    const initialCount = await this.removeButtons.count();
-    
-    for (let i = 0; i < initialCount; i++) {
-      await this.removeButtons.first().click();
-      await this.page.waitForTimeout(500);
+  async removeAllItems(): Promise<void> {
+    const count = await this.removeButtons.count();
+    if (count === 0) return;
+
+    for (let i = 0; i < count; i++) {
+      await this.removeButtons.nth(0).click();
+      await this.page.waitForTimeout(200); // pequena pausa para estabilidade
     }
-    
+
     await expect(this.cartItems).toHaveCount(0);
   }
 }

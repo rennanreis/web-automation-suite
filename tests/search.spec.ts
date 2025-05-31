@@ -1,6 +1,10 @@
 import { test, expect } from '../fixtures/fixtures';
 import { ProductPage } from '../page-objects/ProductPage';
 
+/**
+ * Test suite for product search and sorting functionality.
+ * Verifies that products are sorted correctly by name and price.
+ */
 test.describe('Product Search and Sorting', () => {
   test('Should sort products by price (low to high)', async ({ navigateToProducts, page }) => {
     await navigateToProducts(); // Agora já está logado e na tela de produtos

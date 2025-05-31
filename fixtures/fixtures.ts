@@ -18,13 +18,26 @@ type TestData = {
  */
 export const test = base.extend<{
   /**
+   * Centralized test data for users and products.
+   */
+  testData: TestData;
+  /**
    * Logs in as the standard user before the test runs.
    * Use this fixture to avoid repeating the login steps in every test.
    */
   loginAsStandardUser: () => Promise<void>;
+  /**
+   * Adds a product to the cart and navigates to the cart page.
+   */
   addProductToCart: () => Promise<void>;
+  /**
+   * Navigates to the products page after login.
+   */
   navigateToProducts: () => Promise<void>;
-  testData: TestData;
+  /**
+   * Resets the state by removing all items from the cart.
+   */
+  resetState: () => Promise<void>;
 }>({
   testData: async ({}, use) => {
     await use({
@@ -36,35 +49,46 @@ export const test = base.extend<{
       products: ['Sauce Labs Backpack', 'Sauce Labs Bike Light']
     });
   },
+
   loginAsStandardUser: async ({ page }, use) => {
-    const loginPage = new LoginPage(page);
-    await loginPage.goto();
-    await loginPage.login('standard_user', 'secret_sauce');
-    await loginPage.assertLoginSuccess();
-    // Makes the login available for the test
-    await use(() => Promise.resolve());
+    const loginAsStandardUser = async () => {
+      const loginPage = new LoginPage(page);
+      await loginPage.goto();
+      await loginPage.login('standard_user', 'secret_sauce');
+      await loginPage.assertLoginSuccess();
+    };
+    await use(loginAsStandardUser);
   },
+
   addProductToCart: async ({ page, loginAsStandardUser }, use) => {
-    await loginAsStandardUser(); 
-    const productPage = new ProductPage(page);
-    await productPage.addFirstProductToCart();
-    await productPage.goToCart();
-    const cartPage = new CartPage(page);
-    await expect(cartPage.cartItems).not.toHaveCount(0);
-    await use(() => Promise.resolve());
+    const addProductToCart = async () => {
+      await loginAsStandardUser();
+      const productPage = new ProductPage(page);
+      await productPage.addFirstProductToCart();
+      await productPage.goToCart();
+      const cartPage = new CartPage(page);
+      await expect(cartPage.cartItems).not.toHaveCount(0);
+    };
+    await use(addProductToCart);
   },
-   navigateToProducts: async ({ page, loginAsStandardUser }, use) => {
-    await loginAsStandardUser();
-    const productPage = new ProductPage(page);
-    await productPage.navigate();
-    await use(() => Promise.resolve());
+
+  navigateToProducts: async ({ page, loginAsStandardUser }, use) => {
+    const navigateToProducts = async () => {
+      await loginAsStandardUser();
+      const productPage = new ProductPage(page);
+      await productPage.navigate();
+    };
+    await use(navigateToProducts);
   },
+
   resetState: async ({ page }, use) => {
-  const cartPage = new CartPage(page);
-  await cartPage.removeAllItems(); 
-  await use(() => Promise.resolve());
-},
+    const resetState = async () => {
+      const cartPage = new CartPage(page);
+      await cartPage.removeAllItems();
+    };
+    await use(resetState);
+  }
 });
 
 // Re-export expect to use in all tests
-export { expect } from '@playwright/test';
+export { expect };

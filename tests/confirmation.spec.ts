@@ -1,10 +1,16 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../fixtures/fixtures';
 import { LoginPage } from '../page-objects/LoginPage';
 import { ProductPage } from '../page-objects/ProductPage';
 import { CartPage } from '../page-objects/CartPage';
 import { CheckoutPage } from '../page-objects/CheckoutPage';
 
+/**
+ * Test suite for the order confirmation screen.
+ * Ensures that after a successful checkout, the user sees the expected message
+ * and can return to the product listing.
+ */
 test.describe('Order Confirmation', () => {
+
   test.beforeEach(async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.goto();

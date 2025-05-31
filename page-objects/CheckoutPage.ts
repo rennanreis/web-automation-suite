@@ -27,7 +27,7 @@ export class CheckoutPage {
   /**
    * Fills the form with user data and goes to the next step.
    */
-  async fillCheckoutInfo(firstName: string, lastName: string, postalCode: string) {
+  async fillCheckoutInfo(firstName: string, lastName: string, postalCode: string): Promise<void> {
     await this.firstNameInput.fill(firstName);
     await this.lastNameInput.fill(lastName);
     await this.postalCodeInput.fill(postalCode);
@@ -37,7 +37,7 @@ export class CheckoutPage {
   /**
    * Completes the purchase and checks the success message.
    */
-  async completeCheckout() {
+  async completeCheckout(): Promise<void> {
     await this.finishButton.click();
     await expect(this.confirmationMessage).toHaveText('Thank you for your order!');
   }

@@ -1,18 +1,23 @@
-import { test, expect } from '@playwright/test';
-import { LoginPage } from '../page-objects/LoginPage';
+import { test, expect } from '../fixtures/fixtures';
 import { ProductPage } from '../page-objects/ProductPage';
 import { CartPage } from '../page-objects/CartPage';
 
+/**
+ * Test suite for cart functionality.
+ * Covers adding products to cart, updating badge count, and removing products.
+ */
 test.describe('Cart Functionality', () => {
-  // Runs before each test: logs in as a standard user
-  test.beforeEach(async ({ page }) => {
-    const loginPage = new LoginPage(page);
-    await loginPage.goto();
-    await loginPage.login('standard_user', 'secret_sauce');
-    await loginPage.assertLoginSuccess();
+
+  test.beforeEach(async ({ resetState }) => {
+    await resetState();
   });
 
-  test('Should add first product to cart and update badge count', async ({ page }) => {
+  /**
+   * Tests that adding a product to the cart updates the cart badge count
+   * and the product is correctly listed on the cart page.
+   */
+  test('Should add first product to cart and update badge count', async ({ loginAsStandardUser, page }) => {
+    await loginAsStandardUser();
     const productPage = new ProductPage(page);
 
     // Add the first product to the cart
@@ -29,7 +34,12 @@ test.describe('Cart Functionality', () => {
     expect(cartProductNames.length).toBeGreaterThan(0);
   });
 
-  test('Should add, check, and remove products from cart', async ({ page }) => {
+  /**
+   * Tests the complete flow of adding, checking, and removing products from the cart.
+   * Validates that the cart is empty after removing all items.
+   */
+  test('Should add, check, and remove products from cart', async ({ loginAsStandardUser, page }) => {
+    await loginAsStandardUser();
     const productPage = new ProductPage(page);
     const cartPage = new CartPage(page);
 
@@ -52,6 +62,4 @@ test.describe('Cart Functionality', () => {
     cartProductNames = await cartPage.getProductNames();
     expect(cartProductNames.length).toBe(0);
   });
-
-  
 });
