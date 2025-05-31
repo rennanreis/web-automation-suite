@@ -2,8 +2,8 @@
 import { Page, Locator, expect } from '@playwright/test';
 
 /**
- * LoginPage groups actions for the login screen.
- * Contains methods to interact with login elements and validate states.
+ * Page Object for the login screen of the Sauce Demo application.
+ * Encapsulates all element selectors and login-related actions.
  */
 export class LoginPage {
   readonly page: Page;
@@ -13,7 +13,7 @@ export class LoginPage {
   readonly errorMessage: Locator;
 
   /**
-   * Initializes all login page locators
+   * Initializes locators for login elements.
    * @param page - Playwright page instance
    */
   constructor(page: Page) {
@@ -25,14 +25,14 @@ export class LoginPage {
   }
 
   /**
-   * Navigates to the login page
+   * Navigates to the login page.
    */
   async goto(): Promise<void> {
     await this.page.goto('https://www.saucedemo.com/');
   }
 
   /**
-   * Performs login with provided credentials
+   * Fills login credentials and submits the form.
    * @param username - User's username
    * @param password - User's password
    */
@@ -43,15 +43,15 @@ export class LoginPage {
   }
 
   /**
-   * Validates successful login by checking inventory page URL
+   * Asserts that login was successful by checking the URL.
    */
   async assertLoginSuccess(): Promise<void> {
     await expect(this.page).toHaveURL(/inventory/);
   }
 
   /**
-   * Validates login error message content
-   * @param expectedMessage - Expected error message text
+   * Asserts that the login error message is visible and correct.
+   * @param expectedMessage - Expected error message content
    */
   async assertLoginError(expectedMessage: string): Promise<void> {
     await expect(this.errorMessage).toBeVisible();

@@ -3,17 +3,17 @@ import { Page, Locator, expect } from '@playwright/test';
 
 /**
  * CartPage groups actions for the shopping cart screen.
- * Here I check what's in the cart and start the checkout process.
+ * It includes item validation and checkout flow initiation.
  */
 export class CartPage {
   readonly page: Page;
   readonly checkoutButton: Locator;
   readonly cartItems: Locator;
-  readonly removeButtons: Locator; // melhor marcar como readonly
+  readonly removeButtons: Locator;
 
   /**
-   * Creates a new CartPage instance.
-   * Needs the Playwright page to interact with the browser.
+   * Initializes all locators for the cart page.
+   * @param page - Playwright page instance
    */
   constructor(page: Page) {
     this.page = page;
@@ -23,14 +23,14 @@ export class CartPage {
   }
 
   /**
-   * Returns a list of product names in the cart.
+   * Returns all product names currently in the cart.
    */
   async getProductNames(): Promise<string[]> {
     return this.cartItems.locator('.inventory_item_name').allTextContents();
   }
 
   /**
-   * Clicks the checkout button to continue the purchase.
+   * Proceeds to the checkout page if there are items in the cart.
    */
   async proceedToCheckout(): Promise<void> {
     await expect(this.cartItems).not.toHaveCount(0);
@@ -39,7 +39,8 @@ export class CartPage {
   }
 
   /**
-   * Removes all items from the cart by clicking each "Remove" button sequentially
+   * Removes all products from the cart by clicking each "Remove" button.
+   * Includes a slight delay for stability between interactions.
    */
   async removeAllItems(): Promise<void> {
     const count = await this.removeButtons.count();
@@ -47,7 +48,7 @@ export class CartPage {
 
     for (let i = 0; i < count; i++) {
       await this.removeButtons.nth(0).click();
-      await this.page.waitForTimeout(200); // pequena pausa para estabilidade
+      await this.page.waitForTimeout(200);
     }
 
     await expect(this.cartItems).toHaveCount(0);

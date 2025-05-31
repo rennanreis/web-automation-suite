@@ -88,9 +88,15 @@ This project uses Playwright’s custom fixtures to:
 - ✅ All major flows (positive and negative) tested  
 - ✅ Test comments standardized in English  
 - ✅ Project structure cleaned and documented  
-- 🔧 CI pipeline (GitHub Actions) – next step  
-- 📊 Add code coverage reports  
-- 📝 Connect test coverage with blog article  
+
+### 🔄 Suggested Future Improvements
+
+- 🔧 Add CI pipeline with GitHub Actions for automated test runs  
+- 📊 Generate and track test coverage reports  
+- 🌀 Implement automatic retry for flaky tests  
+- 🧾 Standardize file and method naming conventions  
+- 🔍 Add better logging for debugging and traceability  
+- 📝 Connect test structure and decisions directly with the final article  
 
 ---
 

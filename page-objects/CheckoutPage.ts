@@ -2,8 +2,8 @@
 import { Page, Locator, expect } from '@playwright/test';
 
 /**
- * CheckoutPage handles the checkout form and final confirmation.
- * Here I fill user details and finish the purchase.
+ * CheckoutPage handles actions related to the checkout flow.
+ * It includes filling out customer information and completing the order.
  */
 export class CheckoutPage {
   readonly page: Page;
@@ -14,6 +14,10 @@ export class CheckoutPage {
   readonly finishButton: Locator;
   readonly confirmationMessage: Locator;
 
+  /**
+   * Initializes all locators used in the checkout process.
+   * @param page - Playwright page instance
+   */
   constructor(page: Page) {
     this.page = page;
     this.firstNameInput = page.locator('[data-test="firstName"]');
@@ -25,7 +29,10 @@ export class CheckoutPage {
   }
 
   /**
-   * Fills the form with user data and goes to the next step.
+   * Fills the checkout form with user data and proceeds to the next step.
+   * @param firstName - User's first name
+   * @param lastName - User's last name
+   * @param postalCode - User's postal code
    */
   async fillCheckoutInfo(firstName: string, lastName: string, postalCode: string): Promise<void> {
     await this.firstNameInput.fill(firstName);
@@ -35,7 +42,7 @@ export class CheckoutPage {
   }
 
   /**
-   * Completes the purchase and checks the success message.
+   * Completes the checkout process and verifies the confirmation message.
    */
   async completeCheckout(): Promise<void> {
     await this.finishButton.click();

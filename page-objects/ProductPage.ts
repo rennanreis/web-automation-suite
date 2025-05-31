@@ -3,7 +3,7 @@ import { Page, Locator, expect } from '@playwright/test';
 
 /**
  * ProductPage groups actions for the product list screen.
- * Here I sort products, add items to the cart, and check the cart status.
+ * Handles sorting, cart interactions, and validations.
  */
 export class ProductPage {
   readonly page: Page;
@@ -25,14 +25,14 @@ export class ProductPage {
   }
 
   /**
-   * Opens the product list page.
+   * Navigate to the product listing page.
    */
   async navigate(): Promise<void> {
     await this.page.goto('https://www.saucedemo.com/inventory.html');
   }
 
   /**
-   * Sorts products by the selected option.
+   * Sort products by the selected option.
    * Options: 'az', 'za', 'lohi', 'hilo'
    */
   async sortProductsBy(option: 'az' | 'za' | 'lohi' | 'hilo'): Promise<void> {
@@ -40,14 +40,14 @@ export class ProductPage {
   }
 
   /**
-   * Returns a list with all product names shown.
+   * Get all visible product names.
    */
   async getAllProductNames(): Promise<string[]> {
     return this.productNames.allTextContents();
   }
 
   /**
-   * Returns a list with all product prices as numbers.
+   * Get all visible product prices as numbers.
    */
   async getAllProductPrices(): Promise<number[]> {
     const prices = await this.productPrices.allTextContents();
@@ -55,22 +55,22 @@ export class ProductPage {
   }
 
   /**
-   * Adds a product to the cart by its position in the list.
+   * Add a product to the cart by index in the product list.
    */
   async addProductToCartByIndex(index: number): Promise<void> {
     await this.addToCartButtons.nth(index).click();
   }
 
   /**
-   * Adds the first product in the list to the cart.
+   * Add the first product in the list to the cart.
    */
   async addFirstProductToCart(): Promise<void> {
     await this.addToCartButtons.first().click();
   }
 
   /**
-   * Returns the number of items shown in the cart badge.
-   * Returns 0 if the badge is hidden.
+   * Get the number shown in the cart badge.
+   * Returns 0 if the badge is not visible.
    */
   async getCartItemCount(): Promise<number> {
     return (await this.cartBadge.isVisible())
@@ -79,7 +79,7 @@ export class ProductPage {
   }
 
   /**
-   * Opens the cart page by clicking the cart icon.
+   * Navigate to the cart page from the cart icon.
    */
   async goToCart(): Promise<void> {
     await this.cartLink.click();
