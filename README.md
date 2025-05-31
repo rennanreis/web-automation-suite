@@ -4,106 +4,107 @@
 ![Status: Portfolio](https://img.shields.io/badge/status-portfolio-blue)
 ![Last Update](https://img.shields.io/badge/last%20update-May%202025-brightgreen)
 
-> Note: This project is part of a personal portfolio and is not open to external contributions (pull requests or issues) at this time.
+> ⚠️ This project is part of a personal portfolio and is not open to external contributions (pull requests or issues) at this time.
 
 An end-to-end test automation suite for the [Sauce Labs Demo Site](https://www.saucedemo.com/) using Playwright and TypeScript.  
-This project demonstrates modern QA practices including isolated test files, clear scenario coverage, and a roadmap for progressive refactoring using the Page Object Model, fixtures, and structured reporting.
+It demonstrates modern QA practices like Page Object Model, custom fixtures, reusable test flows, and future-proof structure.
 
 ---
 
-## Quick Start
+## 🚀 Quick Start
 
-1. Clone this repository
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Run all tests:
-   ```bash
-   npx playwright test
-   ```
-4. Run a specific test file:
-   ```bash
-   npx playwright test tests/cart.spec.ts
-   ```
-5. Run in headed mode:
-   ```bash
-   npx playwright test tests/cart.spec.ts --headed
-   ```
-6. Open Playwright Test UI:
-   ```bash
-   npx playwright test --ui
-   ```
+```bash
+# Clone the repo
+git clone https://github.com/your-username/web-automation-suite
 
+# Install dependencies
+npm install
+
+# Run all tests
+npx playwright test
+
+# Run a specific test
+npx playwright test tests/cart.spec.ts
+
+# Run in headed mode
+npx playwright test --headed
+
+# Launch test runner UI
+npx playwright test --ui
+```
 ---
 
 ## Repository Structure
 
 ```
-├── node_modules/ # Project dependencies (auto-generated)
-├── page-objects/ # Page Object Model implementations
-│ ├── LoginPage.ts
-│ ├── ProductPage.ts
-│ ├── CartPage.ts
-│ └── CheckoutPage.ts
-├── reports/ # Test execution reports
-├── tests/ # Automated test scripts
-│ ├── login.spec.ts # Login scenario
-│ ├── search.spec.ts # Product search and sorting
-│ ├── cart.spec.ts # Add to cart
-│ ├── checkout.spec.ts # Checkout process
-│ └── confirmation.spec.ts # Order confirmation
-├── .gitignore
-├── LICENSE
-├── package-lock.json
-├── package.json
-├── playwright.config.ts
-├── README.md
-└── tsconfig.json
+├── page-objects/        # Page Object Model definitions
+├── fixtures/            # Custom test fixtures (auth, data, setup)
+├── tests/               # Individual test files
+├── playwright.config.ts # Playwright configuration
+├── README.md            # Project documentation
 ```
 
 ---
 
-## Covered Test Scenarios
+## ✅ Covered Test Scenarios
 
-- **Login:** Valid credentials login flow
-- **Product Search & Sorting:** Sorting products by price and name (A-Z, Z-A, low-high, high-low)
-- **Cart:** Adding a product to the cart and validating the cart badge
-- **Checkout:** Completing the checkout with valid information
-- **Order Confirmation:** Validating the confirmation message and returning to the products page 
-
----
-
-## Project Highlights
-
-- Applies the Page Object Model to keep UI interactions organized and easier to maintain.
-- Each test file focuses on a real user scenario (login, sorting, cart, checkout, confirmation).
-- All code is written in TypeScript for better readability and type safety.
-- Uses Conventional Commits for a clear and understandable commit history.
-- English comments are included throughout the code to help with understanding and future maintenance.
-- The project is structured to make it easier to add new features and improvements as my learning progresses.
+- **Login:** Valid, invalid and locked credentials  
+- **Search & Sorting:** Sorting by price and name (A-Z, Z-A, low-high, high-low)  
+- **Cart:** Adding and removing products  
+- **Checkout:** Successful checkout flow and validation of required fields  
+- **Confirmation:** Confirmation message + return navigation  
 
 ---
 
-## Roadmap & Next Steps
+## 🧪 Fixtures & Reusability
 
-- ✅ Refactored all tests to use the Page Object Model
-- ✅ Improved code comments and documentation
-- ✅ Covered main user flows: login, sorting, cart, checkout, confirmation
-- 🔄 Add reusable fixtures for setup and teardown
-- ➕ Expand test coverage with negative and edge case scenarios
-- 📚 Add more documentation and usage examples
-- 🔧 Integrate reporting and CI pipeline
+This project uses Playwright’s custom fixtures to:
 
----
+- Reuse login flows (`loginAsStandardUser`)
+- Set up products in cart (`addProductToCart`, `loginAndAddProductToCart`)
+- Navigate directly to protected routes (`navigateToProducts`)
+- Centralize test data (`testData` fixture with valid/invalid users and product names)
+- Clean up state before/after tests (`resetState`)
 
-## About
-
-This project is intended as a demonstration of modern, maintainable, and scalable end-to-end test automation using Playwright.  
-All scenarios are based on the Sauce Labs Demo Site, a widely used environment for QA training and experimentation.
+➡️ This drastically reduces boilerplate and improves test readability.
 
 ---
 
-## License
+## 🧠 Project Highlights
 
-Distributed under the MIT License.
+- Page Object Model for clean test logic and maintenance  
+- Custom fixtures to handle setup, teardown, and user flows  
+- English comments and clear test scenarios  
+- Modular and scalable structure  
+- Commit history follows Conventional Commits for clarity  
+- Tailored for QA portfolios and real-world team practices  
+
+---
+
+## 📌 Roadmap & Status
+
+- ✅ Page Object Model applied to all test suites  
+- ✅ Centralized and reusable fixtures implemented  
+- ✅ All major flows (positive and negative) tested  
+- ✅ Test comments standardized in English  
+- ✅ Project structure cleaned and documented  
+- 🔧 CI pipeline (GitHub Actions) – next step  
+- 📊 Add code coverage reports  
+- 📝 Connect test coverage with blog article  
+
+---
+
+## 🎯 About
+
+This project was created as part of a self-study path to master QA automation with Playwright.  
+It simulates a real QA engineer workflow in a production team, with emphasis on code readability, maintainability, and CI readiness.
+
+All scenarios are built on top of the **Sauce Labs Demo App**, a sandbox platform widely used in testing practices.
+
+---
+
+## 📝 License
+
+MIT — feel free to read and learn, but external PRs are currently not accepted.
+
+---
