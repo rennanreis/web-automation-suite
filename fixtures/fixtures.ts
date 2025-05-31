@@ -14,28 +14,40 @@ type TestData = {
 
 /**
  * Custom test setup with fixtures for this project.
- * Here I create a reusable login fixture for tests that need authentication.
+ * Provides reusable authentication flows, navigation, and test data.
  */
 export const test = base.extend<{
   /**
-   * Centralized test data for users and products.
+   * Centralized reusable test data (users, products).
    */
   testData: TestData;
+
   /**
-   * Logs in as the standard user before the test runs.
-   * Use this fixture to avoid repeating the login steps in every test.
+   * Logs in as a standard user.
+   * Use this in tests that require an authenticated session.
    */
   loginAsStandardUser: () => Promise<void>;
+
   /**
-   * Adds a product to the cart and navigates to the cart page.
+   * Logs in and adds the first product to the cart.
+   * Useful for tests that begin with a product in the cart.
+   */
+  loginAndAddProductToCart: () => Promise<void>;
+
+  /**
+   * Logs in, adds a product, and navigates to the cart page.
+   * Validates that the cart is not empty.
    */
   addProductToCart: () => Promise<void>;
+
   /**
-   * Navigates to the products page after login.
+   * Logs in and navigates to the product listing page.
    */
   navigateToProducts: () => Promise<void>;
+
   /**
-   * Resets the state by removing all items from the cart.
+   * Clears the cart by removing all items.
+   * Use in beforeEach teardown or cleanup logic.
    */
   resetState: () => Promise<void>;
 }>({
@@ -58,6 +70,19 @@ export const test = base.extend<{
       await loginPage.assertLoginSuccess();
     };
     await use(loginAsStandardUser);
+  },
+
+  loginAndAddProductToCart: async ({ page }, use) => {
+    const loginPage = new LoginPage(page);
+    const productPage = new ProductPage(page);
+
+    await loginPage.goto();
+    await loginPage.login('standard_user', 'secret_sauce');
+    await loginPage.assertLoginSuccess();
+
+    await productPage.addFirstProductToCart();
+
+    await use(async () => {});
   },
 
   addProductToCart: async ({ page, loginAsStandardUser }, use) => {
@@ -90,5 +115,5 @@ export const test = base.extend<{
   }
 });
 
-// Re-export expect to use in all tests
+// Re-export expect to be used in all tests
 export { expect };

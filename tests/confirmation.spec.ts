@@ -1,5 +1,4 @@
 import { test, expect } from '../fixtures/fixtures';
-import { LoginPage } from '../page-objects/LoginPage';
 import { ProductPage } from '../page-objects/ProductPage';
 import { CartPage } from '../page-objects/CartPage';
 import { CheckoutPage } from '../page-objects/CheckoutPage';
@@ -11,14 +10,11 @@ import { CheckoutPage } from '../page-objects/CheckoutPage';
  */
 test.describe('Order Confirmation', () => {
 
-  test.beforeEach(async ({ page }) => {
-    const loginPage = new LoginPage(page);
-    await loginPage.goto();
-    await loginPage.login('standard_user', 'secret_sauce');
-    await loginPage.assertLoginSuccess();
+  test.beforeEach(async ({ loginAndAddProductToCart, page }) => {
+    // Logs in and adds a product to the cart using a composed fixture
+    await loginAndAddProductToCart();
 
     const productPage = new ProductPage(page);
-    await productPage.addFirstProductToCart();
     await productPage.goToCart();
 
     const cartPage = new CartPage(page);
@@ -26,7 +22,7 @@ test.describe('Order Confirmation', () => {
 
     const checkoutPage = new CheckoutPage(page);
     await checkoutPage.fillCheckoutInfo('Test', 'User', '12345');
-    await checkoutPage.finishButton.click(); // Avança para a página de confirmação
+    await checkoutPage.finishButton.click(); // Moves to the confirmation page
   });
 
   test('Should display confirmation message and allow returning to products', async ({ page }) => {
@@ -34,7 +30,7 @@ test.describe('Order Confirmation', () => {
     const confirmationMessage = page.locator('.complete-header');
     await expect(confirmationMessage).toHaveText('Thank you for your order!');
 
-    // Click "Back Home" button and assert redirection
+    // Click "Back Home" button and assert redirection to product page
     await page.click('[data-test="back-to-products"]');
     await expect(page).toHaveURL(/inventory/);
   });

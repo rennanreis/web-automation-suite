@@ -9,6 +9,7 @@ import { CartPage } from '../page-objects/CartPage';
 test.describe('Cart Functionality', () => {
 
   test.beforeEach(async ({ resetState }) => {
+    // Ensures the cart is empty before each test
     await resetState();
   });
 
@@ -16,18 +17,16 @@ test.describe('Cart Functionality', () => {
    * Tests that adding a product to the cart updates the cart badge count
    * and the product is correctly listed on the cart page.
    */
-  test('Should add first product to cart and update badge count', async ({ loginAsStandardUser, page }) => {
-    await loginAsStandardUser();
+  test('Should add first product to cart and update badge count', async ({ loginAndAddProductToCart, page }) => {
+    // Logs in and adds a product using a composed fixture
+    await loginAndAddProductToCart();
+
     const productPage = new ProductPage(page);
-
-    // Add the first product to the cart
-    await productPage.addFirstProductToCart();
-
-    // Validate that the cart badge displays "1"
+    // Checks that the cart badge displays "1"
     const cartCount = await productPage.getCartItemCount();
     expect(cartCount).toBe(1);
 
-    // Go to the cart page and check if the product is listed
+    // Navigates to the cart and verifies that the product is listed
     await productPage.goToCart();
     const cartPage = new CartPage(page);
     const cartProductNames = await cartPage.getProductNames();
@@ -35,30 +34,29 @@ test.describe('Cart Functionality', () => {
   });
 
   /**
-   * Tests the complete flow of adding, checking, and removing products from the cart.
-   * Validates that the cart is empty after removing all items.
+   * Tests the full flow of adding, checking, and removing products from the cart.
+   * Ensures the cart is empty after all items are removed.
    */
-  test('Should add, check, and remove products from cart', async ({ loginAsStandardUser, page }) => {
-    await loginAsStandardUser();
+  test('Should add, check, and remove products from cart', async ({ loginAndAddProductToCart, page }) => {
+    // Logs in and adds a product using a composed fixture
+    await loginAndAddProductToCart();
+
     const productPage = new ProductPage(page);
     const cartPage = new CartPage(page);
 
-    // 1. Add the first product to the cart
-    await productPage.addFirstProductToCart();
-
-    // 2. Validate that the cart badge displays "1"
+    // Validates that the cart badge displays "1"
     let cartCount = await productPage.getCartItemCount();
     expect(cartCount).toBe(1);
 
-    // 3. Go to the cart page and check if the product is listed
+    // Navigates to the cart and confirms the product is listed
     await productPage.goToCart();
     let cartProductNames = await cartPage.getProductNames();
     expect(cartProductNames.length).toBeGreaterThan(0);
 
-    // 4. Remove all items from the cart
+    // Removes all items from the cart
     await cartPage.removeAllItems();
 
-    // 5. Check if the cart is empty
+    // Ensures the cart is now empty
     cartProductNames = await cartPage.getProductNames();
     expect(cartProductNames.length).toBe(0);
   });

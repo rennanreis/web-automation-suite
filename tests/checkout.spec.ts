@@ -8,24 +8,24 @@ import { CheckoutPage } from '../page-objects/CheckoutPage';
  * Verifies that a user can go through the checkout process successfully.
  */
 test.describe('Checkout Process', () => {
-  test('Should complete checkout with valid info', async ({ addProductToCart, page }) => {
-    // Use fixture to log in and add a product to the cart
-    await addProductToCart();
+  test('Should complete checkout with valid info', async ({ loginAndAddProductToCart, page }) => {
+    // Logs in and adds a product to the cart using the composed fixture
+    await loginAndAddProductToCart();
 
     const productPage = new ProductPage(page);
-    // Navigate to the cart after product is added
+    // Navigates to the cart page
     await productPage.goToCart();
 
     const cartPage = new CartPage(page);
-    // Proceed to the checkout page
+    // Proceeds to the checkout page
     await cartPage.proceedToCheckout();
 
     const checkoutPage = new CheckoutPage(page);
-    // Fill in checkout information and complete the order
+    // Fills in valid checkout information and completes the order
     await checkoutPage.fillCheckoutInfo('Test', 'User', '12345');
     await checkoutPage.completeCheckout();
 
-    // Verify that the confirmation message is shown
+    // Asserts that the confirmation message is displayed
     await expect(checkoutPage.confirmationMessage).toHaveText('Thank you for your order!');
   });
 });
