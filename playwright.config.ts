@@ -4,10 +4,11 @@ export default defineConfig({
   testDir: './tests',
   timeout: 60000,
   fullyParallel: true,
-  reporter: 'html',
+  reporter: 'html', // Ou: [['html', { open: 'never' }]]
   use: {
     baseURL: 'https://www.saucedemo.com/',
     headless: true,
-    screenshot: 'only-on-failure'
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure', // Opcional
   }
 });
